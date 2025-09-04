@@ -14,6 +14,11 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+def ensure_db_exists():
+    """Ensure database and tables exist"""
+    if not os.path.exists(DATABASE):
+        init_db()
+
 def init_db():
     """Initialize the database"""
     conn = get_db_connection()
@@ -33,6 +38,7 @@ def init_db():
 @app.route('/')
 def index():
     """Main page showing all todos"""
+    ensure_db_exists()
     conn = get_db_connection()
     todos = conn.execute(
         'SELECT * FROM todos ORDER BY created_at DESC'
