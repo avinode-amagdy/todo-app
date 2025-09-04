@@ -5,7 +5,7 @@
 replicaCount: 2
 
 image:
-  repository: todo-app
+  repository: openmetadatahackathon2025.azurecr.io/todo-app-hackathon/todo
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"

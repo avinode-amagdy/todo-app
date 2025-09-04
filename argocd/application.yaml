@@ -22,6 +22,8 @@ spec:
       valueFiles:
         - values.yaml
       parameters:
+        - name: image.repository
+          value: "openmetadatahackathon2025.azurecr.io/todo-app-hackathon/todo"
         - name: image.tag
           value: "latest"
         - name: ingress.hosts[0].host
