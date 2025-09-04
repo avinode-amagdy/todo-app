@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: todo-app-project
+  namespace: argocd
+  labels:
+    app: todo-app
+spec:
+  description: Project for Todo App
+  sourceRepos:
+  - 'https://github.com/avinode-amagdy/todo-app.git'
+  - '*'
+  destinations:
+  - namespace: todo-app
+    server: https://kubernetes.default.svc
+  - namespace: argocd
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  - group: ''
+    kind: PersistentVolume
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Secret
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: ServiceAccount
+  - group: ''
+    kind: PersistentVolumeClaim
+  - group: apps
+    kind: Deployment
+  - group: networking.k8s.io
+    kind: Ingress
+  - group: autoscaling
+    kind: HorizontalPodAutoscaler
+  roles:
+  - name: admin
+    description: Admin role for todo-app
+    policies:
+    - p, proj:todo-app-project:admin, applications, *, todo-app-project/*, allow
+    - p, proj:todo-app-project:admin, repositories, *, *, allow
+    groups:
+    - todo-app:admin

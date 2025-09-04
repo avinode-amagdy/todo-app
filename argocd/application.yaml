@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: todo-app
+  namespace: argocd
+  labels:
+    app: todo-app
+    tags.datadoghq.com/env: "development"
+    tags.datadoghq.com/service: "todo-app"
+    tags.datadoghq.com/version: "1.0.0"
+    team: "platform"
+    component: "backend"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/avinode-amagdy/todo-app.git
+    targetRevision: HEAD
+    path: helm/todo-app
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image.tag
+          value: "latest"
+        - name: ingress.hosts[0].host
+          value: "todo-app.local"
+        - name: datadog.enabled
+          value: "true"
+        - name: datadog.tags.env
+          value: "development"
+        - name: datadog.tags.service
+          value: "todo-app"
+        - name: datadog.tags.version
+          value: "1.0.0"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: todo-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 10

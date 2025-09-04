@@ -1,0 +1,17 @@
+apiVersion: v2
+name: todo-app
+description: A simple todo application with SQLite database
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - todo
+  - flask
+  - sqlite
+  - python
+home: https://github.com/avinode-amagdy/todo-app
+sources:
+  - https://github.com/avinode-amagdy/todo-app
+maintainers:
+  - name: Todo App Team
+    email: team@example.com
